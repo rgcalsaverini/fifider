@@ -1,0 +1,6 @@
+#ifndef FIFIDER_CONFIG_HPP
+#define FIFIDER_CONFIG_HPP
+
+
+
+#endif //FIFIDER_CONFIG_HPP
