@@ -4,6 +4,8 @@
 /* Defaults */
 #define HW_DEF_INTERVAL    28800
 #define HW_DEF_PORTION     2
+#define HW_SAVE_INTERVAL   30
+#define HW_DSP_TIMEOUT     6000
 
 /* Memory */
 #define HW_MAGSTR_VAL      "fidev_2"
@@ -27,7 +29,7 @@
 #define HW_BTN_SEL_PIN      3
 
 /* Number of digits on display */
-#define HW_DISP_DIGITS     5
+#define HW_DISP_DIGITS     6
 
 /* Display digit segment maping */
 #define HW_DISP_0   0x7D;

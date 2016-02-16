@@ -8,11 +8,19 @@
 #include "hardware.hpp"
 #include "Display.hpp"
 
-#define MAGSTR_VAL    "fidev_1"
-#define MAGSTR_LEN    7
-#define MAGSTR_ADDR   113
-
 class FiFider{
+    public:
+        enum FeederState{
+            FST_WAITING = 0,
+            FST_FEEDING = 1
+        };
+
+        enum DisplayState{
+            DST_ETA = 0,
+            DST_INTERVAL = 1,
+            DST_PORTION = 2
+        };
+
     public:
         static FiFider& getInstance(void);
 
@@ -38,9 +46,24 @@ class FiFider{
         void saveState(void);
         void loadState(void);
 
+        void showEta(void);
+        void showInterval(void);
+        void showPortion(void);
+
         static void timerOverflow(void);
 
+        static void cycleDisplayState(void);
+
+        static void increaseBtnCallback(void);
+        static void decreaseBtnCallback(void);
+        static void selectBtnCallback(void);
+
+        static unsigned int calculateStep(unsigned int value);
+
     private:
+        static FeederState _feeder_state;
+        static DisplayState _display_state;
+        static unsigned long _display_state_change;
         Button _increase_btn;
         Button _decrease_btn;
         Button _select_btn;
