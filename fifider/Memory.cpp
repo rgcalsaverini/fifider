@@ -8,19 +8,28 @@ Memory& Memory::getInstance(void){
 }
 
 bool Memory::isReady(void) {
-    char magic_string[MAGSTR_LEN+1];
-    readString(MAGSTR_ADDR, MAGSTR_ADDR+MAGSTR_LEN, magic_string);
-    magic_string[MAGSTR_LEN] = 0;
-    return strcmp(magic_string, MAGSTR_VAL) == 0;
+    char magic_string[HW_MAGSTR_LEN+1];
+    readString(HW_MAGSTR_ADDR, HW_MAGSTR_ADDR+HW_MAGSTR_LEN, magic_string);
+    magic_string[HW_MAGSTR_LEN] = 0;
+    return strcmp(magic_string, HW_MAGSTR_VAL) == 0;
 }
 
 void Memory::initialize(void) {
-    write(MAGSTR_ADDR, MAGSTR_VAL, MAGSTR_LEN);
+    write(HW_MAGSTR_ADDR, HW_MAGSTR_VAL, HW_MAGSTR_LEN);
 }
 
 void Memory::write(unsigned int address, char* data, unsigned int length) {
     for(unsigned int i = 0; i < length && i+address < EEPROM.length(); i++){
         EEPROM.write(i+address, data[i]);
+    }
+}
+
+void Memory::write(unsigned int address, unsigned long data, unsigned int length) {
+    unsigned long power = 1;
+    for(unsigned int i = 0; i < length && i+address < EEPROM.length(); i++){
+        unsigned char digit_data = (data/power) % 256;
+        EEPROM.write(i+address, digit_data);
+        power *= 256;
     }
 }
 
