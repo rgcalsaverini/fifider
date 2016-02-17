@@ -9,6 +9,7 @@ void Button::initialize(int pin, unsigned int debounce_ms, unsigned int hold_ms)
     _hold_length = hold_ms;
     _press_milis = 0;
     _pressed = false;
+    _hold_blocks_up = true;
     pinMode(_pin, INPUT);
 }
 
@@ -31,7 +32,7 @@ void Button::check(void) {
     } else if(_pressed && millis() - _press_milis > _debounce){
         _pressed = false;
 
-        if(_on_up_callback != NULL){
+        if(_on_up_callback != NULL && (!_hold_blocks_up || !_hold_called)){
             _on_up_callback();
         }
     }

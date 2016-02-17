@@ -6,7 +6,9 @@ unsigned long FiFider::_interval = HW_DEF_INTERVAL;
 unsigned char FiFider::_portion = HW_DEF_PORTION;
 FiFider::FeederState FiFider::_feeder_state = FST_WAITING;
 FiFider::DisplayState FiFider::_display_state = DST_ETA;
+FiFider::ServoState FiFider::_servo_state = SST_POS_3;
 unsigned long FiFider::_ui_timestamp = 0;
+unsigned long FiFider::_servo_state_change = 0;
 
 FiFider& FiFider::getInstance(void) {
     static FiFider instance;
@@ -37,11 +39,33 @@ void FiFider::begin(void) {
 
     _select_btn.initialize(HW_BTN_SEL_PIN);
     _select_btn.onUp(FiFider::selectBtnCallback);
-
+    _select_btn.onHold(FiFider::resetEtaBtnCallback);
 
     Display::getInstance().initialize();
+
+    _servo.attach(HW_SERVO_PIN);
+    _servo.write(HW_SERVO_A_3);
 }
 
+void FiFider::feed(void){
+    if(_servo_state == SST_IDLE){
+        _servo.write(SST_POS_1);
+        _servo_state = SST_POS_1;
+        _servo_state_change = millis();
+    } else if(_servo_state == SST_POS_1 && millis() - _servo_state_change > HW_SERVO_T_1) {
+        _servo.write(SST_POS_2);
+        _servo_state = SST_POS_2;
+        _servo_state_change = millis();
+    } else if(_servo_state == SST_POS_2 && millis() - _servo_state_change > HW_SERVO_T_2) {
+        _servo.write(SST_POS_3);
+        _servo_state = SST_POS_3;
+        _servo_state_change = millis();
+    } else if(_servo_state == SST_POS_3 && millis() - _servo_state_change > HW_SERVO_T_3) {
+        _servo.write(SST_POS_3);
+        _servo_state = SST_IDLE;
+        _servo_state_change = millis();
+    }
+}
 
 void FiFider::saveState(void) {
     Memory::getInstance().write(HW_ETA_ADDR, FiFider::getEta(), HW_ETA_BITS);
@@ -85,8 +109,9 @@ void FiFider::checkState(void) {
             showPortion();
         }
     } else if(_feeder_state == FST_FEEDING) {
-        //TODO Actuate servo here and move sate change there
-        _feeder_state = FST_WAITING;
+        feed();
+        if(_servo_state == SST_IDLE)
+            _feeder_state = FST_WAITING;
     } else {
         _feeder_state = FST_WAITING;
     }
@@ -187,6 +212,15 @@ void FiFider::decreaseBtnCallback(void) {
 void FiFider::selectBtnCallback(void) {
     cycleDisplayState();
     _ui_timestamp = millis();
+}
+
+void FiFider::resetEtaBtnCallback(void) {
+    if(_display_state == DST_ETA){
+        _eta = _interval;
+        _ui_timestamp = millis();
+    }else{
+        selectBtnCallback();
+    }
 }
 
 unsigned long FiFider::calculateStep(unsigned long value) {

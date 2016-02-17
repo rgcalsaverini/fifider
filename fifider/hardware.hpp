@@ -7,9 +7,18 @@
 #define HW_SAVE_INTERVAL   30
 #define HW_DSP_TIMEOUT     5000
 #define HW_MAX_INTERVAL    172800
-#define HW_MIN_INTERVAL    1800
+#define HW_MIN_INTERVAL    60 // 1800
 #define HW_MAX_PORTION     15
 #define HW_MIN_PORTION     1
+
+/* Servo */
+#define HW_SERVO_PIN      9
+#define HW_SERVO_A_1      30
+#define HW_SERVO_T_1      1000
+#define HW_SERVO_A_2      30
+#define HW_SERVO_T_2      1000
+#define HW_SERVO_A_3      30
+#define HW_SERVO_T_3      1000
 
 /* Memory */
 #define HW_MAGSTR_VAL      "fidev_5"
@@ -31,6 +40,7 @@
 #define HW_BTN_INCR_PIN     8
 #define HW_BTN_DECR_PIN     5
 #define HW_BTN_SEL_PIN      3
+#define HW_BTN_FEED_PIN     10
 
 /* Number of digits on display */
 #define HW_DISP_DIGITS     5

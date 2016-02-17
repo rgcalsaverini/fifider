@@ -18,13 +18,17 @@ class Button{
 
         void check(void);
 
+        void holdBlocksUp(bool value){_hold_blocks_up = true;}
+
     private:
         int _pin;
-        unsigned int _debounce, _hold_length;
+        unsigned int _debounce;
+        unsigned int _hold_length;
         unsigned long _press_milis;
         bool _pressed;
         bool _down_called;
         bool _hold_called;
+        bool _hold_blocks_up;
         void (*_on_down_callback)(void);
         void (*_on_up_callback)(void);
         void (*_on_hold_callback)(void);
