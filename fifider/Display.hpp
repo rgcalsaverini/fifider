@@ -21,7 +21,6 @@ class Display{
     private:
         Display() {};
 
-        void shiftString(unsigned char *data, unsigned int length);
         void shiftByte(unsigned char data);
 
         void digitOut(unsigned char display);

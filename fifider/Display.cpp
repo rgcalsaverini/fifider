@@ -31,19 +31,6 @@ void Display::shiftByte(unsigned char data) {
     digitalWrite(_clock_pin, 0);
 }
 
-void Display::shiftString(unsigned char *data, unsigned int length) {
-    int i;
-
-    digitalWrite(_data_pin, 0);
-    digitalWrite(_clock_pin, 0);
-    digitalWrite(_latch_pin, 0);
-
-    for(i = length - 1 ; i >= 0 ; i--)
-        shiftByte(data[i]);
-
-    digitalWrite(_latch_pin, 1);
-}
-
 void Display::out(void){
     for(int i = 0 ; i < _num_digits ; i++){
         digitOut(i);
@@ -52,8 +39,8 @@ void Display::out(void){
 
 void Display::digitOut(unsigned char digit) {
     digitalWrite(_latch_pin, 0);
-    unsigned char sr_data[2] = {1<<digit, _digit_data[digit]};
-    shiftString(sr_data, 2);
+    shiftByte(1<<digit);
+    shiftByte(_digit_data[digit]);
     digitalWrite(_latch_pin, 1);
 }
 

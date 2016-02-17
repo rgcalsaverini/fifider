@@ -9,7 +9,7 @@ void Button::initialize(int pin, unsigned int debounce_ms, unsigned int hold_ms)
     _hold_length = hold_ms;
     _press_milis = 0;
     _pressed = false;
-    pinMode(_pin, OUTPUT);
+    pinMode(_pin, INPUT);
 }
 
 void Button::check(void) {
@@ -19,10 +19,14 @@ void Button::check(void) {
         if(!_pressed) {
             _press_milis = millis();
             _pressed = true;
-        } else if(millis() - _press_milis > _debounce && _on_down_callback != NULL) {
+            _down_called = false;
+            _hold_called = false;
+        } else if(millis() - _press_milis > _debounce && _on_down_callback != NULL && !_down_called) {
             _on_down_callback();
-        } else if(millis() - _press_milis > _hold_length && _on_hold_callback != NULL) {
+            _down_called = true;
+        } else if(millis() - _press_milis > _hold_length && _on_hold_callback != NULL && !_hold_called) {
             _on_hold_callback();
+            _hold_called = true;
         }
     } else if(_pressed && millis() - _press_milis > _debounce){
         _pressed = false;

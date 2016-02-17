@@ -23,6 +23,8 @@ class Button{
         unsigned int _debounce, _hold_length;
         unsigned long _press_milis;
         bool _pressed;
+        bool _down_called;
+        bool _hold_called;
         void (*_on_down_callback)(void);
         void (*_on_up_callback)(void);
         void (*_on_hold_callback)(void);

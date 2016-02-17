@@ -37,7 +37,7 @@ class FiFider{
         unsigned char getPortion(void){return _portion;}
         void setPortion(unsigned char val){_portion = val;}
 
-    private:
+    // private:
         FiFider(FiFider const&);
         void operator=(FiFider const&);
 
@@ -58,12 +58,12 @@ class FiFider{
         static void decreaseBtnCallback(void);
         static void selectBtnCallback(void);
 
-        static unsigned int calculateStep(unsigned int value);
+        static unsigned long calculateStep(unsigned long value);
 
-    private:
+    // private:
         static FeederState _feeder_state;
         static DisplayState _display_state;
-        static unsigned long _display_state_change;
+        static unsigned long _ui_timestamp;
         Button _increase_btn;
         Button _decrease_btn;
         Button _select_btn;

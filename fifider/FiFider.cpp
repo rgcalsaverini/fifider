@@ -6,7 +6,7 @@ unsigned long FiFider::_interval = HW_DEF_INTERVAL;
 unsigned char FiFider::_portion = HW_DEF_PORTION;
 FiFider::FeederState FiFider::_feeder_state = FST_WAITING;
 FiFider::DisplayState FiFider::_display_state = DST_ETA;
-unsigned long FiFider::_display_state_change = 0;
+unsigned long FiFider::_ui_timestamp = 0;
 
 FiFider& FiFider::getInstance(void) {
     static FiFider instance;
@@ -23,7 +23,7 @@ void FiFider::begin(void) {
         saveState();
         Memory::getInstance().initialize();
     }else{
-        loadState();
+        // loadState();
     }
 
     Timer1.initialize(1000000);
@@ -91,94 +91,110 @@ void FiFider::checkState(void) {
         _feeder_state = FST_WAITING;
     }
 
-    if(_display_state != DST_ETA && millis() - _display_state_change > HW_DSP_TIMEOUT)
+    if(_display_state != DST_ETA && millis() - _ui_timestamp > HW_DSP_TIMEOUT)
         _display_state = DST_ETA;
 
     Display::getInstance().out();
+
 }
 
 void FiFider::showEta(void) {
     if(_eta >= 3600) {
-        Display::getInstance().setDigit(0, (FiFider::getEta()/36000) % 99);
-        Display::getInstance().setDigit(1, (FiFider::getEta()/3600) % 10);
-        Display::getInstance().setDigit(2, (FiFider::getEta()/600) % 6);
-        Display::getInstance().setDigit(3, (FiFider::getEta()/60) % 10);
+        Display::getInstance().setDigit(3, (FiFider::getEta()/36000) % 99);
+        Display::getInstance().setDigit(2, (FiFider::getEta()/3600) % 10);
+        Display::getInstance().setDigit(1, (FiFider::getEta()/600) % 6);
+        Display::getInstance().setDigit(0, (FiFider::getEta()/60) % 10);
         Display::getInstance().setDigit(4, (FiFider::getEta()%2) * 0xFF);
     }else{
-        Display::getInstance().setDigit(0, (FiFider::getEta()/600) % 6);
-        Display::getInstance().setDigit(1, (FiFider::getEta()/60) % 10);
-        Display::getInstance().setDigit(2, (FiFider::getEta()/10) % 6);
-        Display::getInstance().setDigit(3, FiFider::getEta() % 10);
+        Display::getInstance().setDigit(3, (FiFider::getEta()/600) % 6);
+        Display::getInstance().setDigit(2, (FiFider::getEta()/60) % 10);
+        Display::getInstance().setDigit(1, (FiFider::getEta()/10) % 6);
+        Display::getInstance().setDigit(0, FiFider::getEta() % 10);
         Display::getInstance().setDigit(4, (FiFider::getEta()%2)*0xFF);
     }
 
-    Display::getInstance().setDigit(5, 0x1);
+    // Display::getInstance().setDigit(5, 0x1);
 }
 
 void FiFider::showInterval(void) {
-    Display::getInstance().setDigit(0, (FiFider::getInterval()/36000) % 99);
-    Display::getInstance().setDigit(1, (FiFider::getInterval()/3600) % 10);
-    Display::getInstance().setDigit(2, (FiFider::getInterval()/600) % 6);
-    Display::getInstance().setDigit(3, (FiFider::getInterval()/60) % 10);
-    Display::getInstance().setDigit(4, 1);
-    Display::getInstance().setDigit(5, 0x2);
+    Display::getInstance().setDigit(3, (FiFider::getInterval()/36000) % 99);
+    Display::getInstance().setDigit(2, (FiFider::getInterval()/3600) % 10);
+    Display::getInstance().setDigit(1, (FiFider::getInterval()/600) % 6);
+    Display::getInstance().setDigit(0, (FiFider::getInterval()/60) % 10);
+    Display::getInstance().setDigit(4, 0);
+    // Display::getInstance().setDigit(5, 0x2);
 }
 
 void FiFider::showPortion(void) {
-    Display::getInstance().setDigit(0, 0);
-    Display::getInstance().setDigit(1, (FiFider::getPortion()/100) % 10);
-    Display::getInstance().setDigit(2, (FiFider::getPortion()/10) % 10);
-    Display::getInstance().setDigit(3, FiFider::getPortion() % 10);
-    Display::getInstance().setDigit(4, 0);
-    Display::getInstance().setDigit(5, 0x4);
+    Display::getInstance().setDigit(3, 0);
+    Display::getInstance().setDigit(2, (FiFider::getPortion()/100) % 10);
+    Display::getInstance().setDigit(1, (FiFider::getPortion()/10) % 10);
+    Display::getInstance().setDigit(0, FiFider::getPortion() % 10);
+    Display::getInstance().setDigit(4, 1);
+    // Display::getInstance().setDigit(5, 0x4);
 }
 
 void FiFider::cycleDisplayState(void) {
-    if(_display_state == DST_ETA) _display_state = DST_INTERVAL;
-    else if(_display_state == DST_INTERVAL) _display_state = DST_PORTION;
-    else if(_display_state == DST_PORTION) _display_state = DST_ETA;
-    _display_state_change = millis();
+    if(_display_state == DST_ETA){
+        _display_state = DST_INTERVAL;
+    }else if(_display_state == DST_INTERVAL){
+        _display_state = DST_PORTION;
+    }
+    else if(_display_state == DST_PORTION){
+        _display_state = DST_ETA;
+    }
 }
 
 void FiFider::increaseBtnCallback(void) {
-    unsigned int new_val;
+    unsigned long new_val;
     if(_display_state == DST_ETA) {
-        new_val = FiFider::getInstance().getEta() + FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
-        FiFider::getInstance().setEta(new_val);
+        // new_val = FiFider::getInstance().getEta() + FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
+        // if(new_val <= 172800)
+        //     FiFider::getInstance().setEta(new_val);
     }else if(_display_state == DST_INTERVAL) {
         new_val = FiFider::getInstance().getInterval() + FiFider::getInstance().calculateStep(FiFider::getInstance().getInterval());
-        FiFider::getInstance().setInterval(new_val);
+        if(new_val <= HW_MAX_INTERVAL){
+            FiFider::getInstance().setInterval(new_val);
+        }
     }else if(_display_state == DST_PORTION) {
-        new_val = FiFider::getInstance().getPortion() + FiFider::getInstance().calculateStep(FiFider::getInstance().getPortion());
-        FiFider::getInstance().setPortion(new_val);
+        new_val = FiFider::getInstance().getPortion() + 1;
+        if(new_val <= HW_MAX_PORTION)
+            FiFider::getInstance().setPortion(new_val);
     }
+    _ui_timestamp = millis();
 }
 void FiFider::decreaseBtnCallback(void) {
-    unsigned int new_val;
+    unsigned long new_val;
     if(_display_state == DST_ETA) {
-        new_val = FiFider::getInstance().getEta() - FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
-        FiFider::getInstance().setEta(new_val);
+        // new_val = FiFider::getInstance().getEta() - FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
+        // if(new_val >= 600)
+        //     FiFider::getInstance().setEta(new_val);
     }else if(_display_state == DST_INTERVAL) {
         new_val = FiFider::getInstance().getInterval() - FiFider::getInstance().calculateStep(FiFider::getInstance().getInterval());
-        FiFider::getInstance().setInterval(new_val);
+        if(new_val >= HW_MIN_INTERVAL){
+            FiFider::getInstance().setInterval(new_val);
+        }
     }else if(_display_state == DST_PORTION) {
-        new_val = FiFider::getInstance().getPortion() - FiFider::getInstance().calculateStep(FiFider::getInstance().getPortion());
-        FiFider::getInstance().setPortion(new_val);
+        new_val = FiFider::getInstance().getPortion() - 1;
+        if(new_val >= HW_MIN_PORTION){
+            FiFider::getInstance().setPortion(new_val);
+
+        }
     }
+    _ui_timestamp = millis();
 }
 
 void FiFider::selectBtnCallback(void) {
     cycleDisplayState();
+    _ui_timestamp = millis();
 }
 
-unsigned int FiFider::calculateStep(unsigned int value) {
-    if(value >= 21600)
+unsigned long FiFider::calculateStep(unsigned long value) {
+    if(value >= 36000)
         return 3600;
-    else if(value >= 3600)
+    else if(value > 3600)
         return 1800;
     else if(value >= 1800)
         return 600;
-    else if(value >= 300)
-        return 300;
     return 60;
 }
