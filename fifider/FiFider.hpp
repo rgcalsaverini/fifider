@@ -32,9 +32,9 @@ class FiFider{
     public:
         static FiFider& getInstance(void);
 
-        void begin(void);
+        void begin(Servo servo);
 
-        void checkState(void);
+        void checkState(Servo servo);
 
         unsigned long getEta(void){return _eta;}
         void setEta(unsigned long val){_eta = val;}
@@ -51,7 +51,7 @@ class FiFider{
 
         FiFider(){};
 
-        void feed(void);
+        void feed(Servo servo);
 
         void saveState(void);
         void loadState(void);
@@ -83,7 +83,7 @@ class FiFider{
         static unsigned long _eta;
         static unsigned long _interval;
         static unsigned char _portion;
-        Servo _servo;
+        // Servo _servo;
 };
 
 #endif //FIFIDER_FIFIDER_HPP

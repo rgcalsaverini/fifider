@@ -15,7 +15,7 @@ FiFider& FiFider::getInstance(void) {
     return instance;
 }
 
-void FiFider::begin(void) {
+void FiFider::begin(Servo servo) {
     if(!Memory::getInstance().isReady()) {
         _eta = HW_DEF_INTERVAL;
         _interval = HW_DEF_INTERVAL;
@@ -41,27 +41,28 @@ void FiFider::begin(void) {
     _select_btn.onUp(FiFider::selectBtnCallback);
     _select_btn.onHold(FiFider::resetEtaBtnCallback);
 
-    Display::getInstance().initialize();
 
-    _servo.attach(HW_SERVO_PIN);
-    _servo.write(HW_SERVO_A_3);
+    // servo.attach(HW_SERVO_PIN);
+    servo.write(HW_SERVO_A_3);
+
+    Display::getInstance().initialize();
 }
 
-void FiFider::feed(void){
+void FiFider::feed(Servo servo){
     if(_servo_state == SST_IDLE){
-        _servo.write(SST_POS_1);
+        servo.write(SST_POS_1);
         _servo_state = SST_POS_1;
         _servo_state_change = millis();
     } else if(_servo_state == SST_POS_1 && millis() - _servo_state_change > HW_SERVO_T_1) {
-        _servo.write(SST_POS_2);
+        servo.write(SST_POS_2);
         _servo_state = SST_POS_2;
         _servo_state_change = millis();
     } else if(_servo_state == SST_POS_2 && millis() - _servo_state_change > HW_SERVO_T_2) {
-        _servo.write(SST_POS_3);
+        servo.write(SST_POS_3);
         _servo_state = SST_POS_3;
         _servo_state_change = millis();
     } else if(_servo_state == SST_POS_3 && millis() - _servo_state_change > HW_SERVO_T_3) {
-        _servo.write(SST_POS_3);
+        servo.write(SST_POS_3);
         _servo_state = SST_IDLE;
         _servo_state_change = millis();
     }
@@ -95,7 +96,7 @@ void FiFider::timerOverflow(void) {
     }
 }
 
-void FiFider::checkState(void) {
+void FiFider::checkState(Servo servo) {
     _increase_btn.check();
     _decrease_btn.check();
     _select_btn.check();
@@ -109,7 +110,7 @@ void FiFider::checkState(void) {
             showPortion();
         }
     } else if(_feeder_state == FST_FEEDING) {
-        feed();
+        feed(servo);
         if(_servo_state == SST_IDLE)
             _feeder_state = FST_WAITING;
     } else {
@@ -171,6 +172,7 @@ void FiFider::cycleDisplayState(void) {
 }
 
 void FiFider::increaseBtnCallback(void) {
+    if(_feeder_state != FST_WAITING) return;
     unsigned long new_val;
     if(_display_state == DST_ETA) {
         // new_val = FiFider::getInstance().getEta() + FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
@@ -189,6 +191,7 @@ void FiFider::increaseBtnCallback(void) {
     _ui_timestamp = millis();
 }
 void FiFider::decreaseBtnCallback(void) {
+    if(_feeder_state != FST_WAITING) return;
     unsigned long new_val;
     if(_display_state == DST_ETA) {
         // new_val = FiFider::getInstance().getEta() - FiFider::getInstance().calculateStep(FiFider::getInstance().getEta());
@@ -210,11 +213,13 @@ void FiFider::decreaseBtnCallback(void) {
 }
 
 void FiFider::selectBtnCallback(void) {
+    if(_feeder_state != FST_WAITING) return;
     cycleDisplayState();
     _ui_timestamp = millis();
 }
 
 void FiFider::resetEtaBtnCallback(void) {
+    if(_feeder_state != FST_WAITING) return;
     if(_display_state == DST_ETA){
         _eta = _interval;
         _ui_timestamp = millis();

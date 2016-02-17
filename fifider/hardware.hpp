@@ -15,9 +15,9 @@
 #define HW_SERVO_PIN      9
 #define HW_SERVO_A_1      30
 #define HW_SERVO_T_1      1000
-#define HW_SERVO_A_2      30
+#define HW_SERVO_A_2      60
 #define HW_SERVO_T_2      1000
-#define HW_SERVO_A_3      30
+#define HW_SERVO_A_3      90
 #define HW_SERVO_T_3      1000
 
 /* Memory */
