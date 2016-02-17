@@ -1,7 +1,6 @@
 #ifndef FIFIDER_FIFIDER_HPP
 #define FIFIDER_FIFIDER_HPP
 
-#include <Servo.h>
 #include "TimerOne.h"
 
 #include "Memory.hpp"
@@ -22,19 +21,12 @@ class FiFider{
             DST_PORTION = 2
         };
 
-        enum ServoState{
-            SST_IDLE = 0,
-            SST_POS_1 = 1,
-            SST_POS_2 = 2,
-            SST_POS_3 = 3
-        };
-
     public:
         static FiFider& getInstance(void);
 
-        void begin(Servo servo);
+        void begin(void);
 
-        void checkState(Servo servo);
+        void checkState(void);
 
         unsigned long getEta(void){return _eta;}
         void setEta(unsigned long val){_eta = val;}
@@ -50,8 +42,6 @@ class FiFider{
         void operator=(FiFider const&);
 
         FiFider(){};
-
-        void feed(Servo servo);
 
         void saveState(void);
         void loadState(void);
@@ -71,19 +61,16 @@ class FiFider{
 
         static unsigned long calculateStep(unsigned long value);
 
-    // private:
+    private:
         static FeederState _feeder_state;
         static DisplayState _display_state;
-        static ServoState _servo_state;
         static unsigned long _ui_timestamp;
-        static unsigned long _servo_state_change;
         Button _increase_btn;
         Button _decrease_btn;
         Button _select_btn;
         static unsigned long _eta;
         static unsigned long _interval;
         static unsigned char _portion;
-        // Servo _servo;
 };
 
 #endif //FIFIDER_FIFIDER_HPP

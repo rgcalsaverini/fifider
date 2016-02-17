@@ -1,11 +1,9 @@
 #include "FiFider.hpp"
-#include <Servo.h>
-Servo servo;
 
 void setup(){
-    FiFider::getInstance().begin(servo);
+    FiFider::getInstance().begin();
 }
 
 void loop() {
-    FiFider::getInstance().checkState(servo);
+    FiFider::getInstance().checkState();
 }
