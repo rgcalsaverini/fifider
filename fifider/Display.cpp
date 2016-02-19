@@ -14,6 +14,23 @@ void Display::initialize(void) {
     pinMode(_clock_pin, OUTPUT);
     pinMode(_latch_pin, OUTPUT);
     pinMode(_data_pin, OUTPUT);
+
+    _segment_map[0]= 0x3F;
+    _segment_map[1]= 0x06;
+    _segment_map[2]= 0x5B;
+    _segment_map[3]= 0x4F;
+    _segment_map[4]= 0x66;
+    _segment_map[5]= 0x6D;
+    _segment_map[6]= 0x7D;
+    _segment_map[7]= 0x07;
+    _segment_map[8]= 0x7F;
+    _segment_map[9]= 0x67;
+    _segment_map[10] /* A */ = 0x77;
+    _segment_map[11] /* b */ = 0x7C;
+    _segment_map[12] /* C */ = 0x39;
+    _segment_map[13] /* d */ = 0x5E;
+    _segment_map[14] /* E */ = 0x79;
+    _segment_map[15] /* F */ = 0x71;
 }
 
 void Display::shiftByte(unsigned char data) {
@@ -46,27 +63,5 @@ void Display::digitOut(unsigned char digit) {
 
 void Display::setDigit(unsigned int idx, int num){
     int data = 0;
-
-    if(num == 0){
-        data = HW_DISP_0;
-    }else if(num == 1){
-        data = HW_DISP_1;
-    }else if(num == 2){
-        data = HW_DISP_2;
-    }else if(num == 3){
-        data = HW_DISP_3;
-    }else if(num == 4){
-        data = HW_DISP_4;
-    }else if(num == 5){
-        data = HW_DISP_5;
-    }else if(num == 6){
-        data = HW_DISP_6;
-    }else if(num == 7){
-        data = HW_DISP_7;
-    }else if(num == 8){
-        data = HW_DISP_8;
-    }else if(num == 9){
-        data = HW_DISP_9;
-    }
-    _digit_data[idx] = data;
+    _digit_data[idx] = _segment_map[num];
 }

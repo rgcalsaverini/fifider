@@ -28,6 +28,7 @@ class Display{
         int _data_pin, _clock_pin, _latch_pin;
         unsigned int _num_digits;
         unsigned char _digit_data[HW_DISP_DIGITS];
+        unsigned char _segment_map[16];
 };
 
 #endif //FIFIDER_DISPLAY_HPP

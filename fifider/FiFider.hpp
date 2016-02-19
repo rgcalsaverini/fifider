@@ -1,6 +1,8 @@
 #ifndef FIFIDER_FIFIDER_HPP
 #define FIFIDER_FIFIDER_HPP
 
+#include <Arduino.h>
+
 #include "Memory.hpp"
 #include "Button.hpp"
 #include "hardware.hpp"

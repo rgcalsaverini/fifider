@@ -4,7 +4,7 @@
 /* Defaults */
 #define HW_DEF_INTERVAL    28800
 #define HW_DEF_PORTION     2
-#define HW_SAVE_INTERVAL   30
+#define HW_SAVE_INTERVAL   180
 #define HW_DSP_TIMEOUT     5000
 #define HW_MAX_INTERVAL    172800
 #define HW_MIN_INTERVAL    1800
@@ -36,17 +36,5 @@
 
 /* Number of digits on display */
 #define HW_DISP_DIGITS     5
-
-/* Display digit segment maping */
-#define HW_DISP_0   0x3F;
-#define HW_DISP_1   0x06;
-#define HW_DISP_2   0x5B;
-#define HW_DISP_3   0x4F;
-#define HW_DISP_4   0x66;
-#define HW_DISP_5   0x6D;
-#define HW_DISP_6   0x7D;
-#define HW_DISP_7   0x07;
-#define HW_DISP_8   0x7F;
-#define HW_DISP_9   0x67;
 
 #endif //FIFIDER_HARDWARE_HPP

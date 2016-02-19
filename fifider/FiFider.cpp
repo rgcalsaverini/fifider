@@ -16,6 +16,16 @@ FiFider& FiFider::getInstance(void) {
 }
 
 void FiFider::begin(void) {
+    Display::getInstance().initialize();
+
+    Display::getInstance().setDigit(0, 15);
+    Display::getInstance().setDigit(1, 14);
+    Display::getInstance().setDigit(2, 14);
+    Display::getInstance().setDigit(3, 13);
+    Display::getInstance().setDigit(4, 0);
+
+    Display::getInstance().out();
+
     if(!Memory::getInstance().isReady()) {
         _eta = HW_DEF_INTERVAL;
         _interval = HW_DEF_INTERVAL;
@@ -44,7 +54,6 @@ void FiFider::begin(void) {
 
     wdt_enable(WDTO_1S);
 
-    Display::getInstance().initialize();
 }
 
 void FiFider::saveState(void) {
