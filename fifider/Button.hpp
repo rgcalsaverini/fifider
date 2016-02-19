@@ -8,7 +8,7 @@ class Button{
     public:
         Button(void){};
 
-        void initialize(int pin, unsigned int debounce_ms=10, unsigned int hold_ms = 2000);
+        void initialize(int pin, unsigned int debounce_ms=20, unsigned int hold_ms = 2000);
 
         void onDown(void (*on_down_callback)(void));
 
