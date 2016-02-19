@@ -57,15 +57,15 @@ void FiFider::begin(void) {
 }
 
 void FiFider::saveState(void) {
-    Memory::getInstance().write(HW_ETA_ADDR, FiFider::getEta(), HW_ETA_BITS);
-    Memory::getInstance().write(HW_INTERVAL_ADDR, FiFider::getInterval(), HW_INTERVAL_BITS);
-    Memory::getInstance().write(HW_PORTION_ADDR, FiFider::getPortion(), HW_PORTION_BITS);
+    Memory::getInstance().write(HW_ETA_ADDR, FiFider::getEta(), HW_ETA_BYTES);
+    Memory::getInstance().write(HW_INTERVAL_ADDR, FiFider::getInterval(), HW_INTERVAL_BYTES);
+    Memory::getInstance().write(HW_PORTION_ADDR, FiFider::getPortion(), HW_PORTION_BYTES);
 }
 
 void FiFider::loadState(void) {
-    _eta = Memory::getInstance().readLong(HW_ETA_ADDR, HW_ETA_ADDR+HW_ETA_BITS);
-    _interval = Memory::getInstance().readLong(HW_INTERVAL_ADDR, HW_INTERVAL_ADDR+HW_INTERVAL_BITS);
-    _portion = Memory::getInstance().readLong(HW_PORTION_ADDR, HW_PORTION_ADDR+HW_PORTION_BITS);
+    _eta = Memory::getInstance().readLong(HW_ETA_ADDR, HW_ETA_ADDR+HW_ETA_BYTES);
+    _interval = Memory::getInstance().readLong(HW_INTERVAL_ADDR, HW_INTERVAL_ADDR+HW_INTERVAL_BYTES);
+    _portion = Memory::getInstance().readLong(HW_PORTION_ADDR, HW_PORTION_ADDR+HW_PORTION_BYTES);
 }
 
 void FiFider::timerOverflow(void) {
@@ -86,7 +86,6 @@ void FiFider::timerOverflow(void) {
 
 void FiFider::checkState(void) {
     wdt_reset();
-    // TODO: Check interval and portion
     _increase_btn.check();
     _decrease_btn.check();
     _select_btn.check();
