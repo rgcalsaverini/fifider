@@ -26,11 +26,26 @@ void Memory::write(unsigned int address, char* data, unsigned int length) {
 }
 
 void Memory::write(unsigned int address, unsigned long data, unsigned int length) {
-    unsigned long power = pow(256,length-1)+1;
+    unsigned long power = pow(256,length-1);
+
+    Serial.print("* Write long from ");
+    Serial.print(address);
+    Serial.print(" to ");
+    Serial.println(address+length);
 
     for(unsigned int i = 0; i < length && i+address < EEPROM.length(); i++){
-        unsigned char digit_data = (data/ (power) ) % 256;
+        unsigned char digit_data = (data/ (power+1) ) % 256;
         EEPROM.write(i+address, digit_data);
+
+        Serial.print("    ");
+        Serial.print(i+address);
+        Serial.print(" Power: ");
+        Serial.print(power+1);
+        Serial.print(" Data:: ");
+        Serial.print(digit_data);
+        Serial.print(" Total ");
+        Serial.println(data);
+
         power /= 256;
     }
 }
@@ -46,14 +61,30 @@ void Memory::readString(unsigned int start_address, unsigned int end_address, ch
 
 unsigned long Memory::readLong(unsigned int start_address, unsigned int end_address) {
     unsigned int mem_idx;
-    unsigned long power = pow(256,end_address-start_address-1)+1;
+    unsigned long power = pow(256,end_address-start_address-1);
     unsigned long data=0;
+
+    Serial.print("* Read long from ");
+    Serial.print(start_address);
+    Serial.print(" to ");
+    Serial.println(end_address);
 
     for (mem_idx = start_address; mem_idx < end_address; mem_idx+=1) {
         unsigned char digit = EEPROM.read(mem_idx);
-        data += digit * power;
+        data += digit * (power+1);
+        Serial.print("    ");
+        Serial.print(mem_idx);
+        Serial.print(" Power: ");
+        Serial.print(power+1);
+        Serial.print(" Data: ");
+        Serial.print(digit);
+        Serial.print(" Total: ");
+        Serial.println(data);
         power /= 256;
     }
+    Serial.print(" ---> ");
+    Serial.print(data);
+    Serial.println("  ");
 
     return data;
 }

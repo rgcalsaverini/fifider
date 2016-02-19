@@ -10,9 +10,11 @@
 #define HW_MIN_INTERVAL    1800
 #define HW_MAX_PORTION     15
 #define HW_MIN_PORTION     1
+#define HW_SAVE_ON_SEL     false
+#define HW_SAVE_ON_RES     false
 
 /* Memory */
-#define HW_MAGSTR_VAL      "fidev_1"
+#define HW_MAGSTR_VAL      "fidev_9"
 #define HW_MAGSTR_LEN      7
 #define HW_MAGSTR_ADDR     0x4
 #define HW_ETA_ADDR        0x50

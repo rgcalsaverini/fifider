@@ -1,6 +1,7 @@
 #include "FiFider.hpp"
 #include "TimerOne.h"
 #include <Arduino.h>
+#include <avr/wdt.h>
 
 unsigned long FiFider::_eta = HW_DEF_INTERVAL;
 unsigned long FiFider::_interval = HW_DEF_INTERVAL;
@@ -41,6 +42,8 @@ void FiFider::begin(void) {
     _select_btn.onUp(FiFider::selectBtnCallback);
     _select_btn.onHold(FiFider::resetEtaBtnCallback);
 
+    wdt_enable(WDTO_1S);
+
     Display::getInstance().initialize();
 }
 
@@ -73,6 +76,7 @@ void FiFider::timerOverflow(void) {
 }
 
 void FiFider::checkState(void) {
+    wdt_reset();
     // TODO: Check interval and portion
     _increase_btn.check();
     _decrease_btn.check();
@@ -192,14 +196,17 @@ void FiFider::selectBtnCallback(void) {
     if(_feeder_state != FST_WAITING) return;
     cycleDisplayState();
     _ui_timestamp = millis();
-    FiFider::getInstance().saveState();}
+    if(HW_SAVE_ON_SEL)
+        FiFider::getInstance().saveState();
+}
 
 void FiFider::resetEtaBtnCallback(void) {
     if(_feeder_state != FST_WAITING) return;
     if(_display_state == DST_ETA){
         _eta = _interval;
         _ui_timestamp = millis();
-        FiFider::getInstance().saveState();
+        if(HW_SAVE_ON_RES)
+            FiFider::getInstance().saveState();
     }else{
         selectBtnCallback();
     }
