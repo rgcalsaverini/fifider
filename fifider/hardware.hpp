@@ -4,7 +4,7 @@
 /* Defaults */
 #define HW_DEF_INTERVAL    28800
 #define HW_DEF_PORTION     2
-#define HW_SAVE_INTERVAL   180
+#define HW_SAVE_INTERVAL   1200
 #define HW_DSP_TIMEOUT     5000
 #define HW_MAX_INTERVAL    172800
 #define HW_MIN_INTERVAL    1800
@@ -12,9 +12,12 @@
 #define HW_MIN_PORTION     1
 #define HW_SAVE_ON_SEL     false
 #define HW_SAVE_ON_RES     false
+#define HW_HOLD_INCR1      300
+#define HW_HOLD_INCR2      100
+#define HW_HOLD_INC_CNT    5
 
 /* Memory */
-#define HW_MAGSTR_VAL      "fidev_9"
+#define HW_MAGSTR_VAL      "FDV_002"
 #define HW_MAGSTR_LEN      7
 #define HW_MAGSTR_ADDR     0x4
 #define HW_ETA_ADDR        0x50

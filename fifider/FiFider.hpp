@@ -54,10 +54,14 @@ class FiFider{
 
         static void cycleDisplayState(void);
 
-        static void increaseBtnCallback(void);
-        static void decreaseBtnCallback(void);
-        static void selectBtnCallback(void);
-        static void resetEtaBtnCallback(void);
+        static void increaseButton(void);
+        static void holdIncreaseButton(void);
+        static void decreaseButton(void);
+        static void holdDecreaseButton(void);
+        static void selectButton(void);
+        static void holdSelectButton(void);
+        static void changeAmount(bool increase);
+
 
         static unsigned long calculateStep(unsigned long value);
 
@@ -65,6 +69,10 @@ class FiFider{
         static FeederState _feeder_state;
         static DisplayState _display_state;
         static unsigned long _ui_timestamp;
+        static unsigned long _hold_init;
+        static bool _is_holding;
+        static bool _hold_increase;
+        static unsigned int _hold_down_count;
         Button _increase_btn;
         Button _decrease_btn;
         Button _select_btn;

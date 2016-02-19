@@ -18,7 +18,9 @@ class Button{
 
         void check(void);
 
-        void holdBlocksUp(bool value){_hold_blocks_up = true;}
+        void holdBlocksUp(bool value){_hold_blocks_up = value;}
+
+        bool isPressed(void){return _pressed;}
 
     private:
         int _pin;
@@ -29,6 +31,7 @@ class Button{
         bool _down_called;
         bool _hold_called;
         bool _hold_blocks_up;
+        unsigned int _hold_down_count;
         void (*_on_down_callback)(void);
         void (*_on_up_callback)(void);
         void (*_on_hold_callback)(void);
