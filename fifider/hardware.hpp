@@ -36,15 +36,15 @@
 #define HW_DISP_DIGITS     5
 
 /* Display digit segment maping */
-#define HW_DISP_0   0b01111101;
-#define HW_DISP_1   0b00010100;
-#define HW_DISP_2   0b01101110;
-#define HW_DISP_3   0b00111110;
-#define HW_DISP_4   0b00010111;
-#define HW_DISP_5   0b00111011;
-#define HW_DISP_6   0b01110011;
-#define HW_DISP_7   0b00011100;
-#define HW_DISP_8   0b01111111;
-#define HW_DISP_9   0b00011111;
+#define HW_DISP_0   0x3F;
+#define HW_DISP_1   0x06;
+#define HW_DISP_2   0x5B;
+#define HW_DISP_3   0x4F;
+#define HW_DISP_4   0x66;
+#define HW_DISP_5   0x6D;
+#define HW_DISP_6   0x7D;
+#define HW_DISP_7   0x07;
+#define HW_DISP_8   0x7F;
+#define HW_DISP_9   0x67;
 
 #endif //FIFIDER_HARDWARE_HPP

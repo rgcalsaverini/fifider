@@ -100,16 +100,16 @@ void FiFider::checkState(void) {
 
 void FiFider::showEta(void) {
     if(_eta >= 3600) {
-        Display::getInstance().setDigit(3, (FiFider::getEta()/36000) % 99);
-        Display::getInstance().setDigit(2, (FiFider::getEta()/3600) % 10);
-        Display::getInstance().setDigit(1, (FiFider::getEta()/600) % 6);
-        Display::getInstance().setDigit(0, (FiFider::getEta()/60) % 10);
+        Display::getInstance().setDigit(0, (FiFider::getEta()/36000) % 99);
+        Display::getInstance().setDigit(1, (FiFider::getEta()/3600) % 10);
+        Display::getInstance().setDigit(2, (FiFider::getEta()/600) % 6);
+        Display::getInstance().setDigit(3, (FiFider::getEta()/60) % 10);
         Display::getInstance().setDigit(4, (FiFider::getEta()%2) * 0xFF);
     }else{
-        Display::getInstance().setDigit(3, (FiFider::getEta()/600) % 6);
-        Display::getInstance().setDigit(2, (FiFider::getEta()/60) % 10);
-        Display::getInstance().setDigit(1, (FiFider::getEta()/10) % 6);
-        Display::getInstance().setDigit(0, FiFider::getEta() % 10);
+        Display::getInstance().setDigit(0, (FiFider::getEta()/600) % 6);
+        Display::getInstance().setDigit(1, (FiFider::getEta()/60) % 10);
+        Display::getInstance().setDigit(2, (FiFider::getEta()/10) % 6);
+        Display::getInstance().setDigit(3, FiFider::getEta() % 10);
         Display::getInstance().setDigit(4, (FiFider::getEta()%2)*0xFF);
     }
 
@@ -117,19 +117,19 @@ void FiFider::showEta(void) {
 }
 
 void FiFider::showInterval(void) {
-    Display::getInstance().setDigit(3, (FiFider::getInterval()/36000) % 99);
-    Display::getInstance().setDigit(2, (FiFider::getInterval()/3600) % 10);
-    Display::getInstance().setDigit(1, (FiFider::getInterval()/600) % 6);
-    Display::getInstance().setDigit(0, (FiFider::getInterval()/60) % 10);
+    Display::getInstance().setDigit(0, (FiFider::getInterval()/36000) % 99);
+    Display::getInstance().setDigit(1, (FiFider::getInterval()/3600) % 10);
+    Display::getInstance().setDigit(2, (FiFider::getInterval()/600) % 6);
+    Display::getInstance().setDigit(3, (FiFider::getInterval()/60) % 10);
     Display::getInstance().setDigit(4, 0);
     // Display::getInstance().setDigit(5, 0x2);
 }
 
 void FiFider::showPortion(void) {
-    Display::getInstance().setDigit(3, 0);
-    Display::getInstance().setDigit(2, (FiFider::getPortion()/100) % 10);
-    Display::getInstance().setDigit(1, (FiFider::getPortion()/10) % 10);
-    Display::getInstance().setDigit(0, FiFider::getPortion() % 10);
+    Display::getInstance().setDigit(0, 0);
+    Display::getInstance().setDigit(1, (FiFider::getPortion()/100) % 10);
+    Display::getInstance().setDigit(2, (FiFider::getPortion()/10) % 10);
+    Display::getInstance().setDigit(3, FiFider::getPortion() % 10);
     Display::getInstance().setDigit(4, 1);
     // Display::getInstance().setDigit(5, 0x4);
 }
@@ -205,9 +205,5 @@ void FiFider::resetEtaBtnCallback(void) {
 unsigned long FiFider::calculateStep(unsigned long value) {
     if(value >= 36000)
         return 3600;
-    else if(value > 3600)
-        return 1800;
-    else if(value >= 1800)
-        return 600;
-    return 60;
+    return 1800;
 }
