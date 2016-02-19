@@ -12,12 +12,12 @@
 #define HW_MIN_PORTION     1
 
 /* Memory */
-#define HW_MAGSTR_VAL      "fidev_5"
+#define HW_MAGSTR_VAL      "fidev_3"
 #define HW_MAGSTR_LEN      7
-#define HW_MAGSTR_ADDR     0x10
-#define HW_ETA_ADDR        0x30
-#define HW_PORTION_ADDR    0x40
-#define HW_INTERVAL_ADDR   0x50
+#define HW_MAGSTR_ADDR     0x4
+#define HW_ETA_ADDR        0x50
+#define HW_PORTION_ADDR    0x70
+#define HW_INTERVAL_ADDR   0x90
 #define HW_ETA_BITS        3
 #define HW_INTERVAL_BITS   3
 #define HW_PORTION_BITS    1

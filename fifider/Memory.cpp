@@ -1,6 +1,7 @@
 #include "Memory.hpp"
 #include <EEPROM.h>
 #include <string.h>
+#include <Arduino.h>
 
 Memory& Memory::getInstance(void){
     static Memory instance;
@@ -25,11 +26,12 @@ void Memory::write(unsigned int address, char* data, unsigned int length) {
 }
 
 void Memory::write(unsigned int address, unsigned long data, unsigned int length) {
-    unsigned long power = 1;
+    unsigned long power = pow(256,length-1)+1;
+
     for(unsigned int i = 0; i < length && i+address < EEPROM.length(); i++){
-        unsigned char digit_data = (data/power) % 256;
+        unsigned char digit_data = (data/ (power) ) % 256;
         EEPROM.write(i+address, digit_data);
-        power *= 256;
+        power /= 256;
     }
 }
 
@@ -44,11 +46,13 @@ void Memory::readString(unsigned int start_address, unsigned int end_address, ch
 
 unsigned long Memory::readLong(unsigned int start_address, unsigned int end_address) {
     unsigned int mem_idx;
-    unsigned long power=1, data=0;
+    unsigned long power = pow(256,end_address-start_address-1)+1;
+    unsigned long data=0;
 
-    for (mem_idx = start_address; mem_idx <= end_address; mem_idx+=1) {
-        data += EEPROM.read(mem_idx) * power;
-        power *= 256;
+    for (mem_idx = start_address; mem_idx < end_address; mem_idx+=1) {
+        unsigned char digit = EEPROM.read(mem_idx);
+        data += digit * power;
+        power /= 256;
     }
 
     return data;

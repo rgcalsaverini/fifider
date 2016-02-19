@@ -1,5 +1,6 @@
 #include "FiFider.hpp"
 #include "TimerOne.h"
+#include <Arduino.h>
 
 unsigned long FiFider::_eta = HW_DEF_INTERVAL;
 unsigned long FiFider::_interval = HW_DEF_INTERVAL;
@@ -18,13 +19,14 @@ void FiFider::begin(void) {
         _eta = HW_DEF_INTERVAL;
         _interval = HW_DEF_INTERVAL;
         _portion = HW_DEF_PORTION;
-        _feeder_state = FST_WAITING;
-        _display_state = DST_ETA;
         saveState();
         Memory::getInstance().initialize();
     }else{
-        // loadState();
+        loadState();
     }
+
+    _feeder_state = FST_WAITING;
+    _display_state = DST_ETA;
 
     Timer1.initialize(1000000);
     Timer1.attachInterrupt(FiFider::timerOverflow);
@@ -49,9 +51,9 @@ void FiFider::saveState(void) {
 }
 
 void FiFider::loadState(void) {
-    FiFider::_eta = Memory::getInstance().readLong(HW_ETA_ADDR, HW_ETA_ADDR+HW_ETA_BITS);
-    FiFider::_interval = Memory::getInstance().readLong(HW_INTERVAL_ADDR, HW_INTERVAL_ADDR+HW_INTERVAL_BITS);
-    FiFider::_portion = Memory::getInstance().readLong(HW_PORTION_ADDR, HW_PORTION_ADDR+HW_PORTION_BITS);
+    _eta = Memory::getInstance().readLong(HW_ETA_ADDR, HW_ETA_ADDR+HW_ETA_BITS);
+    _interval = Memory::getInstance().readLong(HW_INTERVAL_ADDR, HW_INTERVAL_ADDR+HW_INTERVAL_BITS);
+    _portion = Memory::getInstance().readLong(HW_PORTION_ADDR, HW_PORTION_ADDR+HW_PORTION_BITS);
 }
 
 void FiFider::timerOverflow(void) {
@@ -68,9 +70,12 @@ void FiFider::timerOverflow(void) {
         if(FiFider::_eta%HW_SAVE_INTERVAL == 0)
             FiFider::getInstance().saveState();
     }
+
+    // Serial.println(FiFider::_eta);
 }
 
 void FiFider::checkState(void) {
+    // TODO: Check interval and portion
     _increase_btn.check();
     _decrease_btn.check();
     _select_btn.check();

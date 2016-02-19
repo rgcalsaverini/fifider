@@ -1,8 +1,6 @@
 #ifndef FIFIDER_FIFIDER_HPP
 #define FIFIDER_FIFIDER_HPP
 
-#include "TimerOne.h"
-
 #include "Memory.hpp"
 #include "Button.hpp"
 #include "hardware.hpp"
